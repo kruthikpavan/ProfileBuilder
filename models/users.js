@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { isEmail} = require("validator")
-
+const bcrypt= require('bcrypt')
 const userSchema= new mongoose.Schema({
   email:{
 
@@ -8,7 +8,19 @@ const userSchema= new mongoose.Schema({
     required: [true,'please enter an email'],
     unique: [true, "the email already exists in the database"],
     lowercase: true,
-    validate: [isEmail,"please enter valid email"]
+    validate: [(email)=>{
+        if(email.charAt(2)==="-"){
+            
+            if(email.slice(0,2)!="sd" && email.charAt(2)!="-"){
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+        return false;
+        
+    },"please enter valid email"]
 
 
 
@@ -23,6 +35,18 @@ const userSchema= new mongoose.Schema({
 
 
 })
+
+
+//fire a function before document saved in database
+
+userSchema.pre("save",async function (next){
+
+    const salt= await bcrypt.genSalt();
+    this.password= await bcrypt.hash(this.password,salt)
+    next()
+
+}
+)
 
 const user= mongoose.model("user",userSchema)
 module.exports= user
