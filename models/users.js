@@ -5,13 +5,13 @@ const userSchema= new mongoose.Schema({
   email:{
 
     type: String,
-    required: [true,'please enter an email'],
-    unique: [true, "the email already exists in the database"],
+    required: [true,'please enter a username'],
+    unique: [true, "the username  already exists in the database"],
     lowercase: true,
     validate: [(email)=>{
         if(email.charAt(2)==="-"){
             
-            if(email.slice(0,2)!="sd" && email.charAt(2)!="-"){
+            if(email.slice(0,3)!="sd-"){
                 return false;
             }
             else{
@@ -20,7 +20,7 @@ const userSchema= new mongoose.Schema({
         }
         return false;
         
-    },"please enter valid email"]
+    },"The username is not in valid format"]
 
 
 

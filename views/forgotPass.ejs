@@ -1,0 +1,39 @@
+<%- include('partials/header'); -%>
+<link rel="stylesheet" href="/style.css">
+<form >
+    <h1>Forgot Password</h1>
+    <label for="username">Username</label>
+    <input type="text" name="username" required>
+    <div class="email error"></div>
+    <label for="newPassword">New Password</label>
+    <input type="password" name="newPassword" required>
+    <div class="password error"></div>
+    <label for="repeatPass">Repeat Password</label>
+    <input type="password" name="repeatPass" required>
+    <div class="password error"></div>
+    <label for="otp">Enter Otp</label>
+    <input type="password" name="otp" required>
+    <div class="password error"></div>
+    <button>login</button>
+
+
+
+</form>
+
+<script>
+const form=document.querySelector("form")
+
+form.addEventListener("submit",(e)=>{
+    e.preventDefault();
+
+    const email=form.email.value
+    const password=form.password.value
+    console.log(email,password);
+})
+
+
+
+
+
+</script>
+<%- include('partials/footer'); -%>
