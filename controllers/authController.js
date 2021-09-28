@@ -1,6 +1,6 @@
 const User= require("../models/users")
-
-
+const jwt= require("jsonwebtoken")
+const maxAge= 3*24*60*60
 //handle errors
 const handleErrors= (err)=>{
     
@@ -22,6 +22,15 @@ const handleErrors= (err)=>{
 
 }
 
+//token creation
+const createToken= (id)=>{
+    return jwt.sign({id},process.env.secretKey,{expiresIn: maxAge })
+}
+
+
+
+
+
 
 //signup routes
 
@@ -35,13 +44,15 @@ module.exports.signup_post= async (req,res)=>{
     
     try{
         const user= await User.create({email,password})
-        res.status(201).json(user)
+        const token= createToken(user._id)
+        res.cookie("jwt",token,{maxAge: maxAge*1000,httpOnly:true})
+        res.status(201).json({user:user._id})
 
     }
 
     catch(err){
         const errors=handleErrors(err)
-        res.status(400).json(errors)
+        res.status(400).json({errors})
     }
     
 }
