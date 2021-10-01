@@ -86,5 +86,4 @@ router.post('/login/forgotPass',authController.fg_post)
 
 
 
-
 module.exports=router;

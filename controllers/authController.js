@@ -2,6 +2,8 @@ const User= require("../models/users")
 const jwt= require("jsonwebtoken")
 const bcrypt= require('bcrypt')
 
+
+
 const maxAge= 3*24*60*60
 
 //handle errors
@@ -15,13 +17,21 @@ const handleErrors= (err)=>{
         return errors
     }
 
+
     if(err.message==="Incorrect Email"){
         errors.email="That email does not exist"
         return errors
     }
-    
+     if(err.message==="password length short"){
+        errors.password="password length short"
+        return errors
+    }
     if(err.message==="Incorrect Password"){
         errors.password="Incorrect Password"
+        return errors
+    }
+    if(err.message==="repeat Password"){
+        errors.password="Passwords dont match"
         return errors
     }
     
@@ -77,6 +87,7 @@ module.exports.login_get= (req,res)=>{
 }
 module.exports.login_post= async (req,res)=>{
     const {email,password}= req.body;
+    
    
     try{
     const user= await User.findOne({email})
@@ -97,7 +108,7 @@ module.exports.login_post= async (req,res)=>{
        
     }
     else{
-
+     
         throw Error("Incorrect Email")
     }
 
@@ -128,7 +139,65 @@ module.exports.fg_get= (req,res)=>{
 
 
 }
-module.exports.fg_post= (req,res)=>{
-    res.send("forgot password")
+module.exports.fg_post= async (req,res)=>{
+  
+    const {username,password,password2,otp}= req.body;
+    
+    
 
+    try{
+        const user2= await User.findOne({email:username})
+    
+         if(user2){
+            if(password.length<5){
+                throw Error("password length short")
+            }
+            else{
+
+                if(password.trim()==password2.trim()){
+                    console.log("passwords matched")
+                    
+                    const token= createToken(user2._id)
+                    res.cookie("jwt",token,{maxAge: maxAge*1000,httpOnly:true})
+                    const salt= await bcrypt.genSalt();
+                    const newPassword= await bcrypt.hash(password2,salt)
+                    const item= {
+                        email: username,
+                        password: newPassword
+                    }
+                    const updated= await User.updateOne({"email":username},{$set:item})
+
+
+
+                 
+                   
+                    
+                       res.status(200).json(user2)
+
+                
+                }
+                else{
+              
+                    throw Error("repeat Password")}
+            }
+
+    
+            
+            
+           
+        }
+        else{
+            
+        throw Error("Incorrect Email")
+        }
+    
+        
+    }
+    
+    catch(err){
+        console.log(err.message)
+        const errors= handleErrors(err)
+        res.status(400).json({errors})
+    }
+  
 }
