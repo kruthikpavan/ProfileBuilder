@@ -24,8 +24,11 @@ app.set('view engine', 'ejs');
 
 //import  routes
 
-const Routes= require('./routes/authRoutes');
-app.use("/",Routes)
+const authRoutes= require('./routes/authRoutes');
+app.use("/",authRoutes)
+
+const profileRoutes= require('./routes/profileRoutes')
+app.use("/pre-profile",profileRoutes)
 
 
 

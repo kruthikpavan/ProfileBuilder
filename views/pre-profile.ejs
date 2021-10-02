@@ -1,0 +1,47 @@
+<%- include('partials/header'); -%>
+<link rel="stylesheet" href="/style.css">
+
+<form action="/pre-profile" method="POST">
+   <% for(i=0;i<profiles.length;i++){
+        if(profiles[i].username===user.email){ %>
+            
+            <% var variable=1 %>
+           
+           
+           
+            <h1>Welcome <%=profiles[i].name%></h1>
+            <p><%=user.email%></p>
+            <p><%=profiles[i].dob%></p>
+            <p><%=profiles[i].cgpa%></p>
+            <button><a href="/pre-profile/main-profile">continue</a></button>
+
+      <% } }%>
+      
+      <% if(variable!=1){ %>
+
+          <h1>Welcome User</h1>
+          <input type="text" placeholder="enter your username"  name="username" required>
+          <input type="text"  placeholder="enter your name"  name="name" required>
+          <input type="text"  placeholder="enter your date of birth"  name="dob" required>
+          <input type="text"  placeholder="enter your cgpa"  name="cgpa" required>
+          <input type="text" placeholder="list your projects" name="projects" required/>
+          <input type="text"  placeholder="Paste your Image link"  name="image" required>
+
+       
+       
+     
+
+<button>Submit</button>
+    <%  } %>
+</form>
+<script>
+
+const form= document.querySelector("form")
+const variable= "<%= variable%>"
+console.log(variable);
+
+
+
+
+</script>
+<%- include('partials/footer'); -%>
